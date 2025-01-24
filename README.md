@@ -43,5 +43,5 @@ Make sure you have the following installed on your system:
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/KimzCodes/ecommerce-typescript.git
+   git clone https://github.com/yousufatef/oureCommerece.git
    cd ecommerce-app
