@@ -9,6 +9,7 @@ import { AboutUs } from '@pages/AboutUs';
 import Login from '@pages/Login';
 import Register from '@pages/Register';
 import NotFound from '@pages/NotFound';
+import Cart from '@pages/Cart';
 
 const router = createBrowserRouter([{
     path: '/',
@@ -24,7 +25,7 @@ const router = createBrowserRouter([{
             element: <Categories />
         },
         {
-            path: 'products/:prefix',
+            path: 'categories/products/:prefix',
             element: <Products />,
             loader: ({ params }) => {
                 if (
@@ -42,6 +43,10 @@ const router = createBrowserRouter([{
         {
             path: 'about-us',
             element: <AboutUs />
+        },
+        {
+            path: 'cart',
+            element: <Cart />
         },
         {
             path: 'login',

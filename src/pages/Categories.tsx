@@ -1,28 +1,32 @@
-import { Category } from "@components/eCommerce"
-import { Col, Container, Row } from "react-bootstrap"
+import { useAppDispatch, useAppSelector } from "@store/hooks";
+import { thunkGetCategories } from "@store/categories/categoriesSlice";
+import { Container } from "react-bootstrap";
+import { useEffect } from "react";
+import { GridList, Heading } from "@components/common";
+import { Category } from "@components/eCommerce";
+import Loading from "@components/feedback/Loading/Loading";
 
 const Categories = () => {
+    const dispatch = useAppDispatch();
+    const { loading, error, record } = useAppSelector((state) => state.categories);
+
+    useEffect(() => {
+        if (!record.length) {
+            dispatch(thunkGetCategories());
+        }
+    }, [dispatch, record]);
+
     return (
         <Container>
-            <Row>
-                <Col xs={3} className="d-flex justify-content-center mb-5 mt-2">
-                    <Category />
-                </Col>
-                <Col xs={3} className="d-flex justify-content-center mb-5 mt-2">
-                    <Category />
-                </Col>
-                <Col xs={3} className="d-flex justify-content-center mb-5 mt-2">
-                    <Category />
-                </Col>
-                <Col xs={3} className="d-flex justify-content-center mb-5 mt-2">
-                    <Category />
-                </Col>
-                <Col xs={3} className="d-flex justify-content-center mb-5 mt-2">
-                    <Category />
-                </Col>
-            </Row>
+            <Heading>Categories</Heading>
+            <Loading status={loading} error={error}>
+                <GridList
+                    record={record}
+                    renderItem={(record) => <Category {...record} />}
+                />
+            </Loading>
         </Container>
-    )
-}
+    );
+};
 
-export default Categories
+export default Categories;
