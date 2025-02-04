@@ -14,7 +14,6 @@ const Product = memo(({ id, title, price, img, max, quantity = 0 }: IProducts) =
     const currentRemainingQuantity = max - quantity;
     const quantityReachedToMax = currentRemainingQuantity <= 0;
 
-
     useEffect(() => {
         if (isBtnDisabled) {
             const debounce = setTimeout(() => {
