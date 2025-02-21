@@ -1,4 +1,5 @@
-import { TLoading } from "@/shared"
+import { TLoading } from "@types"
+import CategorySkeleton from "../Skeletons/CategorySkeleton"
 
 type ILoading = {
     status: TLoading,
@@ -7,7 +8,7 @@ type ILoading = {
 }
 const Loading = ({ status, error, children }: ILoading) => {
     if (status === "pending") {
-        return <div>Loading please wait...</div>
+        return <CategorySkeleton />
     } else if (status === "failed") {
         return <div>{error}</div>
     } else {
