@@ -2,7 +2,7 @@ import { GridList, Heading } from "@components/common"
 import { Product } from "@components/eCommerce"
 import Loading from "@components/feedback/Loading/Loading"
 import { useAppDispatch, useAppSelector } from "@store/hooks"
-import { productsFullInfoCleanUp, thunkGetWishlist } from "@store/wishlist/wishlistSlice"
+import { cleanWishlistProductsFullInfo, thunkGetWishlist } from "@store/wishlist/wishlistSlice"
 import { useEffect } from "react"
 
 const Wishlist = () => {
@@ -14,14 +14,14 @@ const Wishlist = () => {
   useEffect(() => {
     dispatch(thunkGetWishlist())
     return () => {
-      dispatch(productsFullInfoCleanUp())
+      dispatch(cleanWishlistProductsFullInfo())
     }
   }, [dispatch])
 
 
   return (
     <div>
-      <Heading>Your Wishlist</Heading>
+      <Heading title={"Your Wishlist"} />
       <Loading status={loading} error={error}>
         <>
           <GridList record={records} renderItem={(records) => <Product {...records} />} />

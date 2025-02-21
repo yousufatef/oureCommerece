@@ -1,7 +1,7 @@
 import { Heading } from "@components/common"
 import { CartItemList, CartSubTotalPrice } from "@components/eCommerce"
 import Loading from "@components/feedback/Loading/Loading"
-import { cartItemChangeQuantity, cartItemRemove, thunkGetProductByItems } from "@store/cart/cartSlice"
+import { cartItemChangeQuantity, cartItemRemove, cleanCartProductFullInfo, thunkGetProductByItems } from "@store/cart/cartSlice"
 import { useAppDispatch, useAppSelector } from "@store/hooks"
 import { useCallback, useEffect } from "react"
 
@@ -12,6 +12,9 @@ const Cart = () => {
 
     useEffect(() => {
         dispatch(thunkGetProductByItems())
+        return () => {
+            dispatch(cleanCartProductFullInfo());
+        }
     }, [dispatch])
 
     const changeQuantityHandler = useCallback(((id: number, quantity: number) => {
@@ -24,7 +27,7 @@ const Cart = () => {
 
     return (
         <>
-            <Heading>Cart</Heading>
+            <Heading title={"Your Cart"} />
             <Loading status={loading} error={error}>
                 <>
                     {products.length ? (

@@ -2,7 +2,7 @@ import { GridList, Heading } from "@components/common";
 import { Product } from "@components/eCommerce"
 import Loading from "@components/feedback/Loading/Loading";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
-import { cleanUp, thunkGetProducts } from "@store/products/productsSlice";
+import { cleanUpProductsRecord, thunkGetProducts } from "@store/products/productsSlice";
 import { useEffect } from "react";
 import { Container } from "react-bootstrap"
 import { useParams } from "react-router-dom";
@@ -25,12 +25,12 @@ const Products = () => {
   useEffect(() => {
     dispatch(thunkGetProducts(params.prefix as string));
     return () => {
-      dispatch(cleanUp());
+      dispatch(cleanUpProductsRecord());
     }
   }, [dispatch, params]);
   return (
     <Container>
-      <Heading><span className="text-capitalize">{params.prefix}</span> Products</Heading>
+      <Heading title={`${params.prefix?.toUpperCase()} Products`} />
       <Loading status={loading} error={error}>
         <GridList record={productsFullInfo} renderItem={(record) => <Product {...record} />} />
       </Loading>

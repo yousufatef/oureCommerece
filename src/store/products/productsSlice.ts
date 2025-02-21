@@ -19,7 +19,7 @@ const productSlice = createSlice({
     name: "products",
     initialState,
     reducers: {
-        cleanUp: (state) => {
+        cleanUpProductsRecord: (state) => {
             state.record = []
         }
     },
@@ -44,4 +44,4 @@ const productSlice = createSlice({
 
 export { thunkGetProducts }
 export default productSlice.reducer
-export const { cleanUp } = productSlice.actions
+export const { cleanUpProductsRecord } = productSlice.actions

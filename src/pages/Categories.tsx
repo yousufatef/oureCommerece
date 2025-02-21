@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@store/hooks";
-import { thunkGetCategories } from "@store/categories/categoriesSlice";
+import { thunkGetCategories, categoriesRecordCleanUp } from "@store/categories/categoriesSlice";
 import { Container } from "react-bootstrap";
 import { useEffect } from "react";
 import { GridList, Heading } from "@components/common";
@@ -11,14 +11,13 @@ const Categories = () => {
     const { loading, error, record } = useAppSelector((state) => state.categories);
 
     useEffect(() => {
-        if (!record.length) {
-            dispatch(thunkGetCategories());
-        }
-    }, [dispatch, record]);
+        dispatch(thunkGetCategories());
+        return () => { dispatch(categoriesRecordCleanUp()); }
+    }, [dispatch]);
 
     return (
         <Container>
-            <Heading>Categories</Heading>
+            <Heading title={"Categories"} />
             <Loading status={loading} error={error}>
                 <GridList
                     record={record}

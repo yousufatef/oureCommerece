@@ -43,6 +43,9 @@ const cartSlice = createSlice({
                 (el) => el.id !== action.payload
             );
         },
+        cleanCartProductFullInfo: (state) => {
+            state.productsFullInfo = []
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(thunkGetProductByItems.pending, (state) => {
@@ -64,5 +67,5 @@ const cartSlice = createSlice({
 
 
 export { getCartTotalQuantitySelector, thunkGetProductByItems }
-export const { addToCart, cartItemChangeQuantity, cartItemRemove } = cartSlice.actions
+export const { addToCart, cartItemChangeQuantity, cartItemRemove, cleanCartProductFullInfo } = cartSlice.actions
 export default cartSlice.reducer
