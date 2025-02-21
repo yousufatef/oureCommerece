@@ -20,9 +20,10 @@ const useProducts = () => {
 
 
     useEffect(() => {
-        dispatch(thunkGetProducts(params.prefix as string));
+        const promise = dispatch(thunkGetProducts(params.prefix as string));
         return () => {
             dispatch(cleanUpProductsRecord());
+            promise.abort()
         }
     }, [dispatch, params]);
     return { error, loading, productsFullInfo, productPrefix }

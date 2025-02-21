@@ -7,8 +7,11 @@ const useCategories = () => {
     const { loading, error, record } = useAppSelector((state) => state.categories);
 
     useEffect(() => {
-        dispatch(thunkGetCategories());
-        return () => { dispatch(categoriesRecordCleanUp()); }
+        const promise = dispatch(thunkGetCategories());
+        return () => {
+            promise.abort()
+            dispatch(categoriesRecordCleanUp());
+        }
     }, [dispatch]);
     return { loading, error, record }
 }

@@ -9,12 +9,13 @@ const useWishlist = () => {
     const records = productsFullInfo.map((el) => ({ ...el, quantity: cartItems[el.id], isLiked: true }))
 
     useEffect(() => {
-        dispatch(thunkGetWishlist())
+        const promise = dispatch(thunkGetWishlist())
         return () => {
+            promise.abort()
             dispatch(cleanWishlistProductsFullInfo())
         }
     }, [dispatch])
-    return {error, loading, records}
+    return { error, loading, records }
 }
 
 export default useWishlist

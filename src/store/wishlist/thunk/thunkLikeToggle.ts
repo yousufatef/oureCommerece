@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import axiosErrorHandler from "@util/axiosErrorHandler";
 import axios from "axios";
 
 const thunkLikeToggle = createAsyncThunk("wishlist/thunkLikeToggle", async (id: number, thunkAPI) => {
@@ -13,11 +14,7 @@ const thunkLikeToggle = createAsyncThunk("wishlist/thunkLikeToggle", async (id: 
             return { type: 'add', id }
         }
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            return rejectWithValue(error.response?.data.message || error.message)
-        } else {
-            rejectWithValue('Failed to get products')
-        }
+        return rejectWithValue(axiosErrorHandler(error))
     }
 
 })

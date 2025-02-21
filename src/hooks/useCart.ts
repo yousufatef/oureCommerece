@@ -8,8 +8,9 @@ const useCart = () => {
     const products = productsFullInfo.map((el) => ({ ...el, quantity: items[el.id] }))
 
     useEffect(() => {
-        dispatch(thunkGetProductByItems())
+        const promise = dispatch(thunkGetProductByItems())
         return () => {
+            promise.abort()
             dispatch(cleanCartProductFullInfo());
         }
     }, [dispatch])

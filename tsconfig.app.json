@@ -41,6 +41,9 @@
       "@store/*": [
         "src/store/*"
       ],
+      "@store": [
+        "src/store/index"
+      ],
       "@customTypes/*": [
         "src/types/*"
       ],
@@ -52,6 +55,9 @@
       ],
       "@util/*": [
         "src/util/*"
+      ],
+      "@util": [
+        "src/util/index"
       ],
       "@services/*": [
         "src/services/*"
