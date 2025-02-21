@@ -1,4 +1,4 @@
-import { IProducts } from "@types";
+import { IProducts, isString } from "@types";
 import { TLoading } from "@types";
 import { createSlice } from "@reduxjs/toolkit";
 import {
@@ -58,7 +58,7 @@ const cartSlice = createSlice({
         });
         builder.addCase(thunkGetProductByItems.rejected, (state, action) => {
             state.loading = "failed";
-            if (action.payload && typeof action.payload === "string") {
+            if (isString(action.payload)) {
                 state.error = action.payload;
             }
         });

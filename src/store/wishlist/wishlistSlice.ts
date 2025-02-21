@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import thunkLikeToggle from "./thunk/thunkLikeToggle";
 import thunkGetWishlist from "./thunk/thunkGetWishlist";
-import { TLoading } from "@types";
+import { isString, TLoading } from "@types";
 import { IProducts } from "@types";
 
 interface IWishlistState {
@@ -57,7 +57,7 @@ const wishlistSlice = createSlice({
         });
         builder.addCase(thunkGetWishlist.rejected, (state, action) => {
             state.loading = "failed";
-            if (action.payload && typeof action.payload === "string") {
+            if (isString(action.payload)) {
                 state.error = action.payload;
             }
         });

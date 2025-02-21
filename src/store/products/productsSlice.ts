@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import thunkGetProducts from "./thunk/thunkGetProducts"
-import { TLoading } from "@types"
+import { isString, TLoading } from "@types"
 import { IProducts } from "@types"
 
 interface IProductsState {
@@ -35,7 +35,7 @@ const productSlice = createSlice({
         })
         builder.addCase(thunkGetProducts.rejected, (state, action) => {
             state.loading = "failed"
-            if (action.payload && typeof action.payload === "string") {
+            if (isString(action.payload)) {
                 state.error = action.payload
             }
         })
