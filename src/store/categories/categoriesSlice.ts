@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import thunkGetCategories from "./thunk/thunkGetCategories";
-import { TLoading } from "@customTypes/shared";
-import { ICategories } from "@customTypes/category";
+import { TLoading } from "@types";
+import { ICategories } from "@types";
 
 
 interface ICategoriesState {

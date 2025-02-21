@@ -44,8 +44,11 @@
       "@store": [
         "src/store/index"
       ],
-      "@customTypes/*": [
+      "@types/*": [
         "src/types/*"
+      ],
+      "@types": [
+        "src/types/index"
       ],
       "@styles/*": [
         "src/styles/*"

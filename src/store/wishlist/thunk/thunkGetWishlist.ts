@@ -1,4 +1,4 @@
-import { IProducts } from "@customTypes/product";
+import { IProducts } from "@types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosErrorHandler from "@util/axiosErrorHandler";
 import axios from "axios";

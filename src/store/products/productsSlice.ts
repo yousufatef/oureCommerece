@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 import thunkGetProducts from "./thunk/thunkGetProducts"
-import { TLoading } from "@customTypes/shared"
-import { IProducts } from "@customTypes/product"
+import { TLoading } from "@types"
+import { IProducts } from "@types"
 
 interface IProductsState {
     record: IProducts[],

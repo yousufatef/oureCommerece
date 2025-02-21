@@ -1,4 +1,4 @@
-import { ICategories } from '@customTypes/category';
+import { ICategories } from '@types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosErrorHandler from '@util/axiosErrorHandler';
 import axios from 'axios';

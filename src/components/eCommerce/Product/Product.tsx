@@ -1,4 +1,4 @@
-import { IProducts } from "@customTypes/product";
+import { IProducts } from "@types";
 import { thunkLikeToggle } from "@store/wishlist/wishlistSlice";
 import { useAppDispatch } from "@store/hooks";
 import { addToCart } from "@store/cart/cartSlice";

@@ -1,10 +1,10 @@
-import { IProducts } from "@customTypes/product";
+import { IProducts } from "@types";
+import { TLoading } from "@types";
 import { createSlice } from "@reduxjs/toolkit";
 import {
     getCartTotalQuantitySelector,
 } from "./selectors";
 import thunkGetProductByItems from "./thunk/thunkGetProductByItems";
-import { TLoading } from "@customTypes/shared";
 
 interface ICartState {
     items: { [key: string]: number };
