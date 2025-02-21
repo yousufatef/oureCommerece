@@ -1,15 +1,20 @@
-import { Button, Spinner } from "react-bootstrap";
-import styles from "./styles.module.css";
 import { IProducts } from "@customTypes/product";
+import { thunkLikeToggle } from "@store/wishlist/wishlistSlice";
 import { useAppDispatch } from "@store/hooks";
 import { addToCart } from "@store/cart/cartSlice";
+import Like from "@assets/svg/like.svg?react";
+import LikeFill from "@assets/svg/like-fill.svg?react";
+import styles from "./styles.module.css";
+import { Button, Spinner } from "react-bootstrap";
+
 import { memo, useEffect, useState } from "react";
 
-const { product, productImg, maximumNotice } = styles;
+const { product, productImg, maximumNotice, wishlistBtn } = styles;
 
-const Product = memo(({ id, title, price, img, max, quantity = 0 }: IProducts) => {
+const Product = memo(({ id, title, price, img, max, quantity = 0, isLiked }: IProducts) => {
     const dispatch = useAppDispatch();
     const [isBtnDisabled, setIsBtnDisabled] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const currentRemainingQuantity = max - quantity;
     const quantityReachedToMax = currentRemainingQuantity <= 0;
@@ -28,9 +33,27 @@ const Product = memo(({ id, title, price, img, max, quantity = 0 }: IProducts) =
         dispatch(addToCart(id));
         setIsBtnDisabled(true);
     };
+    const likeToggleHandler = () => {
+        if (!isLoading) {
+            setIsLoading(true);
+            dispatch(thunkLikeToggle(id))
+                .unwrap()
+                .then(() => setIsLoading(false))
+                .catch(() => setIsLoading(false));
+        }
+    };
 
     return (
         <div className={product}>
+            <div className={wishlistBtn} onClick={likeToggleHandler}>
+                {isLoading ? (
+                    <Spinner animation="border" size="sm" variant="primary" />
+                ) : isLiked ? (
+                    <LikeFill />
+                ) : (
+                    <Like />
+                )}
+            </div>
             <div className={productImg}>
                 <img src={img} alt={title} />
             </div>
@@ -42,6 +65,7 @@ const Product = memo(({ id, title, price, img, max, quantity = 0 }: IProducts) =
                     : `You Can Add ${currentRemainingQuantity} item(s)`}
             </p>
             <Button
+
                 onClick={addToCartHandler}
                 disabled={isBtnDisabled || quantityReachedToMax}
                 variant="info"

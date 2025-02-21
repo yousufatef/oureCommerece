@@ -6,4 +6,5 @@ export interface IProducts {
     img: string;
     quantity?: number;
     max: number;
+    isLiked?: boolean;
 }
