@@ -1,21 +1,44 @@
-import { TLoading } from "@types"
-import CategorySkeleton from "../Skeletons/CategorySkeleton"
+import CategorySkeleton from "../Skeletons/CategorySkeleton";
+import ProductSkeleton from "../Skeletons/ProductSkeleton";
+import CartSkeleton from "../Skeletons/CartSkeleton";
+import LottieHandler from "../LottieHandler/LottieHandler";
 
-type ILoading = {
-    status: TLoading,
-    error: string | null,
-    children: React.ReactNode
-}
-const Loading = ({ status, error, children }: ILoading) => {
+
+import { TLoading } from "@types";
+
+const skeletonsTypes = {
+    category: CategorySkeleton,
+    product: ProductSkeleton,
+    cart: CartSkeleton,
+};
+
+type LoadingProps = {
+    status: TLoading;
+    error: null | string;
+    children: React.ReactNode;
+    type?: keyof typeof skeletonsTypes;
+};
+
+const Loading = ({
+    status,
+    error,
+    children,
+    type = "category",
+}: LoadingProps) => {
+    const Component = skeletonsTypes[type];
+
     if (status === "pending") {
-        return <CategorySkeleton />
-    } else if (status === "failed") {
-        return <div>{error}</div>
-    } else {
-        return <>{children}</>
+        return <Component />;
     }
-}
+    if (status === "failed") {
+        return (
+            <div>
+                <LottieHandler type="error" message={error as string} />
+                {error}
+            </div>
+        );
+    }
+    return <div>{children}</div>;
+};
 
-export default Loading
-
-// Using Compose The Component Pattern 
+export default Loading;

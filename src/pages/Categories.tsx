@@ -13,6 +13,7 @@ const Categories = () => {
             <Heading title={"Categories"} />
             <Loading status={loading} error={error}>
                 <GridList
+                    emptyMessage='There are no categories'
                     record={record}
                     renderItem={(record) => <Category {...record} />}
                 />
