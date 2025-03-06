@@ -1,4 +1,3 @@
-
 const AboutUs = () => {
   return (
     <div>AboutUs</div>
@@ -6,3 +5,4 @@ const AboutUs = () => {
 }
 
 export default AboutUs
+
