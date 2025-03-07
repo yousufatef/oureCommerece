@@ -10,7 +10,7 @@ const Wishlist = () => {
   return (
     <div>
       <Heading title={"Your Wishlist"} />
-      <Loading status={loading} error={error}>
+      <Loading status={loading} error={error} type="product">
         <>
           <GridList record={records}
             emptyMessage="Your wishlist is empty"

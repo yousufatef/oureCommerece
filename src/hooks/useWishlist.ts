@@ -1,21 +1,33 @@
-import { useAppDispatch, useAppSelector } from "@store/hooks"
-import { cleanWishlistProductsFullInfo, thunkGetWishlist } from "@store/wishlist/wishlistSlice"
-import { useEffect } from "react"
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
+import {
+    thunkGetWishlist,
+    cleanWishlistProductsFullInfo,
+} from "@store/wishlist/wishlistSlice";
 
 const useWishlist = () => {
-    const dispatch = useAppDispatch()
-    const { productsFullInfo, loading, error } = useAppSelector((state) => state.wishlist)
-    const cartItems = useAppSelector((state) => state.cart.items)
-    const records = productsFullInfo.map((el) => ({ ...el, quantity: cartItems[el.id], isLiked: true }))
+    const dispatch = useAppDispatch();
+    const { loading, error, productsFullInfo } = useAppSelector(
+        (state) => state.wishlist
+    );
+    const cartItems = useAppSelector((state) => state.cart.items);
 
     useEffect(() => {
-        const promise = dispatch(thunkGetWishlist())
+        const promise = dispatch(thunkGetWishlist("productsFullInfo"));
         return () => {
-            promise.abort()
-            dispatch(cleanWishlistProductsFullInfo())
-        }
-    }, [dispatch])
-    return { error, loading, records }
-}
+            promise.abort();
+            dispatch(cleanWishlistProductsFullInfo());
+        };
+    }, [dispatch]);
 
-export default useWishlist
+    const records = productsFullInfo.map((el) => ({
+        ...el,
+        quantity: cartItems[el.id],
+        isLiked: true,
+        isAuthenticated: true,
+    }));
+
+    return { records, loading, error };
+};
+
+export default useWishlist;

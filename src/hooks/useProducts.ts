@@ -8,6 +8,7 @@ const useProducts = () => {
     const productPrefix = params.prefix
     const dispatch = useAppDispatch();
     const { loading, error, record } = useAppSelector((state) => state.products);
+    const userAccessToken = useAppSelector((state) => state.auth.accessToken)
 
     const cartItems = useAppSelector((state) => state.cart.items)
     const wishlistItemsId = useAppSelector((state) => state.wishlist.itemsId)
@@ -15,7 +16,8 @@ const useProducts = () => {
     const productsFullInfo = record.map((el) => ({
         ...el,
         quantity: cartItems[el.id] || 0,
-        isLiked: wishlistItemsId.includes(el.id)
+        isLiked: wishlistItemsId.includes(el.id),
+        isAuthenticated: userAccessToken ? true : false,
     }));
 
 
@@ -26,6 +28,7 @@ const useProducts = () => {
             promise.abort()
         }
     }, [dispatch, params]);
+
     return { error, loading, productsFullInfo, productPrefix }
 }
 

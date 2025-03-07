@@ -1,30 +1,42 @@
-import { IProducts } from "@types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axiosErrorHandler from "@util/axiosErrorHandler";
 import axios from "axios";
+import { axiosErrorHandler } from "@util";
+import { IProducts } from "@types";
+import { RootState } from "@store/index";
 
-// Define the expected response type as an array of IProducts
+type TDataType = "productsFullInfo" | "ProductIds";
 type TResponse = IProducts[];
 
 const thunkGetWishlist = createAsyncThunk(
     "wishlist/thunkGetWishlist",
-    async (_, thunkAPI) => {
-        const { rejectWithValue, fulfillWithValue, signal } = thunkAPI;
+    async (dataType: TDataType, thunkAPI) => {
+        const { rejectWithValue, signal, getState } = thunkAPI;
+        const { auth } = getState() as RootState;
         try {
-            const userWishlist = await axios.get<{ productId: number }[]>("/wishlist?userId=1", { signal });
+            const userWishlist = await axios.get<{ productId: number }[]>(
+                `/wishlist?userId=${auth.user?.id}`,
+                { signal }
+            );
+
             if (!userWishlist.data.length) {
-                return fulfillWithValue([] as TResponse);
+                return { data: [], dataType: "empty" };
             }
 
-            const concatenatedItemsId = userWishlist.data
-                .map((el) => `id=${el.productId}`)
-                .join("&");
+            if (dataType === "ProductIds") {
+                const concatenatedItemsId = userWishlist.data.map((el) => el.productId);
+                return { data: concatenatedItemsId, dataType: "productsIds" };
+            } else {
+                const concatenatedItemsId = userWishlist.data
+                    .map((el) => `id=${el.productId}`)
+                    .join("&");
 
-            const response = await axios.get<TResponse>(`/products?${concatenatedItemsId}`);
-            return response.data;
-
+                const response = await axios.get<TResponse>(
+                    `/products?${concatenatedItemsId}`
+                );
+                return { data: response.data, dataType: "ProductsFullInfo" };
+            }
         } catch (error) {
-            return rejectWithValue(axiosErrorHandler(error))
+            return rejectWithValue(axiosErrorHandler(error));
         }
     }
 );

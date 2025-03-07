@@ -1,17 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import thunkLikeToggle from "./thunk/thunkLikeToggle";
 import thunkGetWishlist from "./thunk/thunkGetWishlist";
-import { isString, TLoading } from "@types";
-import { IProducts } from "@types";
-
-interface IWishlistState {
+import { authLogout } from "@store/auth/authSlice";
+import { IProducts, TLoading, isString } from "@types";
+interface IWishlist {
     itemsId: number[];
     productsFullInfo: IProducts[];
     error: null | string;
     loading: TLoading;
 }
 
-const initialState: IWishlistState = {
+const initialState: IWishlist = {
     itemsId: [],
     productsFullInfo: [],
     error: null,
@@ -31,29 +30,32 @@ const wishlistSlice = createSlice({
             state.error = null;
         });
         builder.addCase(thunkLikeToggle.fulfilled, (state, action) => {
-            if (action.payload?.type === "add") {
+            if (action.payload.type === "add") {
                 state.itemsId.push(action.payload.id);
             } else {
-                state.itemsId = state.itemsId.filter((el) => el !== action.payload?.id);
+                state.itemsId = state.itemsId.filter((el) => el !== action.payload.id);
                 state.productsFullInfo = state.productsFullInfo.filter(
-                    (el) => el.id !== action.payload?.id
+                    (el) => el.id !== action.payload.id
                 );
             }
         });
         builder.addCase(thunkLikeToggle.rejected, (state, action) => {
-            if (action.payload && typeof action.payload === "string") {
+            if (isString(action.payload)) {
                 state.error = action.payload;
             }
         });
-
-        //get wishlist items
+        // get wishlist items
         builder.addCase(thunkGetWishlist.pending, (state) => {
             state.loading = "pending";
             state.error = null;
         });
         builder.addCase(thunkGetWishlist.fulfilled, (state, action) => {
             state.loading = "succeeded";
-            state.productsFullInfo = action.payload;
+            if (action.payload.dataType === "ProductsFullInfo") {
+                state.productsFullInfo = action.payload.data as IProducts[];
+            } else if (action.payload.dataType === "productsIds") {
+                state.itemsId = action.payload.data as number[];
+            }
         });
         builder.addCase(thunkGetWishlist.rejected, (state, action) => {
             state.loading = "failed";
@@ -61,9 +63,15 @@ const wishlistSlice = createSlice({
                 state.error = action.payload;
             }
         });
+
+        // when logout reset
+        builder.addCase(authLogout, (state) => {
+            state.itemsId = [];
+            state.productsFullInfo = [];
+        });
     },
 });
 
 export { thunkLikeToggle, thunkGetWishlist };
-export default wishlistSlice.reducer;
 export const { cleanWishlistProductsFullInfo } = wishlistSlice.actions;
+export default wishlistSlice.reducer;

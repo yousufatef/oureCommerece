@@ -2,16 +2,23 @@ import styles from "./styles.module.css"
 import { Badge, Container, Nav, Navbar, NavDropdown } from "react-bootstrap"
 import { NavLink } from "react-router-dom";
 import HeaderLeftBar from "./HeaderLeftBar/HeaderLeftBar";
-import { useAppSelector } from "@store/hooks";
-import { useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
 import { authLogout } from "@store/auth/authSlice";
+import { useEffect } from "react";
+import { thunkGetWishlist } from "@store/wishlist/wishlistSlice";
 
 
 
 const { headerContainer, headerLogo, headerLeftBar } = styles;
 const Header = () => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const { user, accessToken } = useAppSelector((state) => state.auth)
+
+    useEffect(() => {
+        if (accessToken) {
+            dispatch(thunkGetWishlist("ProductIds"));
+        }
+    }, [dispatch, accessToken]);
     return (
         <header>
             <div className={headerContainer}>
