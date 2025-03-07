@@ -11,8 +11,11 @@ const Products = lazy(() => import("@pages/Products"));
 const AboutUs = lazy(() => import("@pages/AboutUs"));
 const Login = lazy(() => import("@pages/Login"));
 const Register = lazy(() => import("@pages/Register"));
-import NotFound from "@pages/NotFound";
+const Profile = lazy(() => import("@pages/Profile"));
 import { LottieHandler, PageSuspenseFallback } from "@components/feedback";
+import NotFound from "@pages/NotFound";
+import ProtectedRoute from "@components/Auth/protectedRoute";
+// protect route 
 
 const router = createBrowserRouter([
     {
@@ -49,9 +52,11 @@ const router = createBrowserRouter([
             {
                 path: "/wishlist",
                 element: (
-                    <PageSuspenseFallback>
-                        <Wishlist />
-                    </PageSuspenseFallback>
+                    <ProtectedRoute>
+                        <PageSuspenseFallback>
+                            <Wishlist />
+                        </PageSuspenseFallback>
+                    </ProtectedRoute>
                 ),
             },
             {
@@ -104,6 +109,16 @@ const router = createBrowserRouter([
                     <PageSuspenseFallback>
                         <Register />
                     </PageSuspenseFallback>
+                ),
+            },
+            {
+                path: "/profile",
+                element: (
+                    <ProtectedRoute>
+                        <PageSuspenseFallback>
+                            <Profile />
+                        </PageSuspenseFallback>
+                    </ProtectedRoute>
                 ),
             },
         ],

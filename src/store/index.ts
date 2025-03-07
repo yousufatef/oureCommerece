@@ -1,56 +1,64 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit'
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import {
-    persistReducer, persistStore,
+    persistStore,
+    persistReducer,
     FLUSH,
     REHYDRATE,
     PAUSE,
     PERSIST,
     PURGE,
     REGISTER,
-} from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import categories from "./categories/categoriesSlice";
+import products from "./products/productsSlice";
+import cart from "./cart/cartSlice";
+import wishlist from "./wishlist/wishlistSlice";
+import auth from "./auth/authSlice";
 
-import categoriesReducer from './categories/categoriesSlice'
-import productsReducer from './products/productsSlice'
-import cartReducer from './cart/cartSlice'
-import wishlistReducer from './wishlist/wishlistSlice'
-
-
-const cartRootPersistConfig = {
-    key: 'cart',
+const rootPersistConfig = {
+    key: "root",
     storage,
-    whitelist: ['items'],
-}
-const wishlistRootPersistConfig = {
-    key: 'wishlist',
+    whitelist: ["cart", "auth"],
+};
+
+const authPersistConfig = {
+    key: "auth",
     storage,
-    whitelist: ['itemsId'],
-}
+    whiteList: ["user", "accessToken"],
+};
+
+const cartPersistConfig = {
+    key: "cart",
+    storage,
+    whitelist: ["items"],
+};
 
 const rootReducer = combineReducers({
-    categories: categoriesReducer,
-    products: productsReducer,
-    wishlist: persistReducer(wishlistRootPersistConfig, wishlistReducer),
-    cart: persistReducer(cartRootPersistConfig, cartReducer),
-},)
+    auth: persistReducer(authPersistConfig, auth),
+    categories,
+    products,
+    cart: persistReducer(cartPersistConfig, cart),
+    wishlist: wishlist,
+});
 
+const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 
 const store = configureStore({
-    reducer: rootReducer,
-    middleware: getDefaultMiddleware => {
-        return getDefaultMiddleware({
+    reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-            }
-        })
-    }
-})
-
+            },
+        }),
+});
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch
+export type AppDispatch = typeof store.dispatch;
 
-const persistor = persistStore(store)
-export { store, persistor }
+const persistor = persistStore(store);
+
+export { store, persistor };

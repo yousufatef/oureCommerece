@@ -1,12 +1,17 @@
 import styles from "./styles.module.css"
-import { Badge, Container, Nav, Navbar } from "react-bootstrap"
+import { Badge, Container, Nav, Navbar, NavDropdown } from "react-bootstrap"
 import { NavLink } from "react-router-dom";
 import HeaderLeftBar from "./HeaderLeftBar/HeaderLeftBar";
+import { useAppSelector } from "@store/hooks";
+import { useDispatch } from "react-redux";
+import { authLogout } from "@store/auth/authSlice";
 
 
 
 const { headerContainer, headerLogo, headerLeftBar } = styles;
 const Header = () => {
+    const dispatch = useDispatch()
+    const { user, accessToken } = useAppSelector((state) => state.auth)
     return (
         <header>
             <div className={headerContainer}>
@@ -24,8 +29,26 @@ const Header = () => {
                             <Nav.Link as={NavLink} to="/about-us">About</Nav.Link>
                         </Nav>
                         <Nav>
-                            <Nav.Link as={NavLink} to="/login">Login</Nav.Link>
-                            <Nav.Link as={NavLink} to="/register">Register</Nav.Link>
+                            {accessToken ? <>
+                                <NavDropdown
+                                    id="nav-dropdown-dark-example"
+                                    title={`Welcome ${user?.firstName} ${user?.lastName}`}
+                                    menuVariant="dark"
+                                >
+                                    <NavDropdown.Item
+                                        as={NavLink}
+                                        to="/profile"
+                                    >Profile</NavDropdown.Item>
+                                    <NavDropdown.Item>Orders</NavDropdown.Item>
+                                    <NavDropdown.Item
+                                        as={NavLink}
+                                        to="/"
+                                        onClick={(() => dispatch(authLogout()))}>Logout</NavDropdown.Item>
+                                </NavDropdown>
+                            </> : <>
+                                <Nav.Link as={NavLink} to="/login">Login</Nav.Link>
+                                <Nav.Link as={NavLink} to="/register">Register</Nav.Link>
+                            </>}
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
