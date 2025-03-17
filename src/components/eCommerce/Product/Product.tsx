@@ -8,8 +8,9 @@ import styles from "./styles.module.css";
 import { Button, Modal, Spinner } from "react-bootstrap";
 
 import { memo, useEffect, useState } from "react";
+import ProductInfo from "../ProductInfo/ProductInfo";
 
-const { product, productImg, maximumNotice, wishlistBtn } = styles;
+const { maximumNotice, wishlistBtn } = styles;
 
 const Product = memo(({ id, title, price, img, max, quantity = 0, isLiked, isAuthenticated }: IProducts) => {
     const dispatch = useAppDispatch();
@@ -58,7 +59,7 @@ const Product = memo(({ id, title, price, img, max, quantity = 0, isLiked, isAut
                     You need to login first to add this item to your wishlist.
                 </Modal.Body>
             </Modal>
-            <div className={product}>
+            <ProductInfo title={title} price={price} img={img} direction="row">
                 <div className={wishlistBtn} onClick={likeToggleHandler}>
                     {isLoading ? (
                         <Spinner animation="border" size="sm" variant="primary" />
@@ -68,11 +69,7 @@ const Product = memo(({ id, title, price, img, max, quantity = 0, isLiked, isAut
                         <Like />
                     )}
                 </div>
-                <div className={productImg}>
-                    <img src={img} alt={title} />
-                </div>
-                <h2>{title}</h2>
-                <h3>{price.toFixed(2)} EGP</h3>
+
                 <p className={maximumNotice}>
                     {quantityReachedToMax
                         ? "You reached to the limit"
@@ -80,7 +77,7 @@ const Product = memo(({ id, title, price, img, max, quantity = 0, isLiked, isAut
                 </p>
                 <Button
                     variant="info"
-                    style={{ color: "white" }}
+                    style={{ color: "white", width: "100%" }}
                     onClick={addToCartHandler}
                     disabled={isBtnDisabled || quantityReachedToMax}
                 >
@@ -92,7 +89,7 @@ const Product = memo(({ id, title, price, img, max, quantity = 0, isLiked, isAut
                         "Add to cart"
                     )}
                 </Button>
-            </div>
+            </ProductInfo>
         </>
     );
 });
