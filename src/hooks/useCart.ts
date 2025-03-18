@@ -1,28 +1,62 @@
-import { cartItemChangeQuantity, cartItemRemove, cleanCartProductFullInfo, thunkGetProductByItems } from "@store/cart/cartSlice"
-import { useAppDispatch, useAppSelector } from "@store/hooks"
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
+import {
+    thunkGetProductByItems,
+    cartItemChangeQuantity,
+    cartItemRemove,
+    cleanCartProductFullInfo,
+} from "@store/cart/cartSlice";
+import { resetOrderStatus } from "@store/orders/ordersSlice";
 
 const useCart = () => {
-    const dispatch = useAppDispatch()
-    const { items, productsFullInfo, loading, error } = useAppSelector((state) => state.cart)
-    const products = productsFullInfo.map((el) => ({ ...el, quantity: items[el.id] }))
+    const dispatch = useAppDispatch();
+
+    const { items, productsFullInfo, loading, error } = useAppSelector(
+        (state) => state.cart
+    );
+
+    const userAccessToken = useAppSelector((state) => state.auth.accessToken);
+
+    const placeOrderStatus = useAppSelector((state) => state.orders.loading);
+
+    const changeQuantityHandler = useCallback(
+        (id: number, quantity: number) => {
+            dispatch(cartItemChangeQuantity({ id, quantity }));
+        },
+        [dispatch]
+    );
+
+    const removeItemHandler = useCallback(
+        (id: number) => {
+            dispatch(cartItemRemove(id));
+        },
+        [dispatch]
+    );
+
+    const products = productsFullInfo.map((el) => ({
+        ...el,
+        quantity: items[el.id],
+    }));
 
     useEffect(() => {
-        const promise = dispatch(thunkGetProductByItems())
+        const promise = dispatch(thunkGetProductByItems());
+
         return () => {
-            promise.abort()
+            promise.abort();
             dispatch(cleanCartProductFullInfo());
-        }
-    }, [dispatch])
+            dispatch(resetOrderStatus());
+        };
+    }, [dispatch]);
 
-    const changeQuantityHandler = useCallback(((id: number, quantity: number) => {
-        dispatch(cartItemChangeQuantity({ id, quantity }));
-    }), [dispatch])
+    return {
+        loading,
+        error,
+        products,
+        userAccessToken,
+        placeOrderStatus,
+        changeQuantityHandler,
+        removeItemHandler,
+    };
+};
 
-    const removeItemHandler = useCallback((id: number) => {
-        dispatch(cartItemRemove(id));
-    }, [dispatch])
-    return { loading, error, products, changeQuantityHandler, removeItemHandler }
-}
-
-export default useCart
+export default useCart;
