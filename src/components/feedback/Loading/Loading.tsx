@@ -1,5 +1,6 @@
 import CategorySkeleton from "../Skeletons/CategorySkeleton";
 import ProductSkeleton from "../Skeletons/ProductSkeleton";
+import TableSkeleton from "../Skeletons/TableSkeleton";
 import CartSkeleton from "../Skeletons/CartSkeleton";
 import LottieHandler from "../LottieHandler/LottieHandler";
 
@@ -10,6 +11,7 @@ const skeletonsTypes = {
     category: CategorySkeleton,
     product: ProductSkeleton,
     cart: CartSkeleton,
+    table: TableSkeleton,
 };
 
 type LoadingProps = {
