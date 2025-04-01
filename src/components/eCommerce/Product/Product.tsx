@@ -6,7 +6,7 @@ import Like from "@assets/svg/like.svg?react";
 import LikeFill from "@assets/svg/like-fill.svg?react";
 import styles from "./styles.module.css";
 import { Button, Modal, Spinner } from "react-bootstrap";
-
+import { addToast } from "@store/toasts/toastsSlice";
 import { memo, useEffect, useState } from "react";
 import ProductInfo from "../ProductInfo/ProductInfo";
 
@@ -33,6 +33,29 @@ const Product = memo(({ id, title, price, img, max, quantity = 0, isLiked, isAut
 
     const addToCartHandler = () => {
         dispatch(addToCart(id));
+
+        dispatch(
+            addToast({
+                title: "Add to Cart",
+                type: "success",
+                message: `${title} added to wishlist`,
+                onCloseToast: () => {
+                    console.log("fired");
+                },
+            })
+        );
+
+        // reached to maximum show warning after success toast
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        currentRemainingQuantity - 1 == 0 &&
+            dispatch(
+                addToast({
+                    type: "warning",
+                    message: `you reached to max from ${title}`,
+                    delayAnimation: true,
+                })
+            );
+
         setIsBtnDisabled(true);
     };
     const likeToggleHandler = () => {
@@ -41,8 +64,27 @@ const Product = memo(({ id, title, price, img, max, quantity = 0, isLiked, isAut
                 setIsLoading(true);
                 dispatch(thunkLikeToggle(id))
                     .unwrap()
-                    .then(() => setIsLoading(false))
-                    .catch(() => setIsLoading(false));
+                    .then(() => {
+                        setIsLoading(false);
+                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                        !isLiked &&
+                            dispatch(
+                                addToast({
+                                    type: "success",
+                                    message: `${title} added to wishlist`,
+                                })
+                            );
+                    })
+                    .catch(() => {
+                        setIsLoading(false);
+                        dispatch(
+                            addToast({
+                                title: "Failed Operation",
+                                type: "danger",
+                                message: `Failed to add wishlist, error from server`,
+                            })
+                        );
+                    });
             }
         } else {
             setShowModal(true);
